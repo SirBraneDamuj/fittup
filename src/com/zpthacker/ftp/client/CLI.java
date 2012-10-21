@@ -7,7 +7,9 @@ import static com.zpthacker.ftp.client.util.ConsoleUtils.readLine;
 import com.zpthacker.ftp.client.commands.Cd;
 import com.zpthacker.ftp.client.commands.Cdup;
 import com.zpthacker.ftp.client.commands.Login;
+import com.zpthacker.ftp.client.commands.Ls;
 import com.zpthacker.ftp.client.commands.Mkdir;
+import com.zpthacker.ftp.client.commands.Passive;
 import com.zpthacker.ftp.client.commands.Pwd;
 import com.zpthacker.ftp.client.commands.Unknown;
 
@@ -50,6 +52,10 @@ public class CLI {
 				return new Cd(tokens);
 			case "cdup":
 				return new Cdup(tokens);
+			case "passive":
+				return new Passive(tokens);
+			case "ls":
+				return new Ls(tokens);
 			case "quit":
 				return null;
 			default:

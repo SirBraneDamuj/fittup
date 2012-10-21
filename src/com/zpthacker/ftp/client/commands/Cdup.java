@@ -28,7 +28,6 @@ public class Cdup extends Command {
 	@Override
 	public void printSuccessMessage() {
 		//don't show a success message for this
-//		println(this.successMessage);
 	}
 
 	@Override

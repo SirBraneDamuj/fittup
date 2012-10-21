@@ -14,6 +14,9 @@ public class Client {
 	Socket clientSocket;
 	PrintStream out;
 	BufferedReader in;
+	boolean passive;
+	String pasvIp;
+	int pasvPort;
 	
 	public Client(String hostname, int port) throws IOException {
 		this.hostname = hostname;
@@ -21,6 +24,16 @@ public class Client {
 		this.clientSocket = new Socket(hostname, port);
 		this.out = new PrintStream(this.clientSocket.getOutputStream());
 		this.in = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
+	}
+	
+	public void setPassive(boolean passive) {
+		this.passive = passive;
+	}
+	
+	public void setPassive(boolean passive, String ip, int port) {
+		this.pasvIp = ip;
+		this.pasvPort = port;
+		this.setPassive(passive);
 	}
 	
 	public String user(String user) {
@@ -49,6 +62,17 @@ public class Client {
 	
 	public String cdup() {
 		return this.writeCommand("cdup");
+	}
+	
+	public String pasv() {
+		return this.writeCommand("pasv");
+	}
+	
+	public String port(String ip, int port) {
+		String portString = "," + Integer.toString(port/256) + ",";
+		portString += port % 256;
+		String argString = ip.replaceAll("\\.", ",") + portString;
+		return this.writeCommand("port " + argString);
 	}
 	
 	public String help() {
