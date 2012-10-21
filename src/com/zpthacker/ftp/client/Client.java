@@ -107,7 +107,7 @@ public class Client {
 	public String port(int port) {
 		String portString = "," + Integer.toString(port/256) + ",";
 		portString += port % 256;
-		String argString = this.clientSocket.getLocalAddress().toString().replaceAll("\\.", ",") + portString;
+		String argString = this.clientSocket.getLocalAddress().toString().substring(1).replaceAll("\\.", ",") + portString;
 		return this.writeCommand("port " + argString);
 	}
 	
@@ -132,6 +132,15 @@ public class Client {
 		this.out.close();
 		this.in.close();
 		this.clientSocket.close();
+		if(this.ssock != null) {
+			this.ssock.close();
+		}
+		if(this.portDataSocket != null) {
+			this.portDataSocket.close();
+		}
+		if(this.pasvDataSocket != null) {
+			this.pasvDataSocket.close();
+		}
 	}
 	
 	public void printLine(String line) {
