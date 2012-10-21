@@ -18,7 +18,7 @@ public class Cd extends Command {
 		if(response == null || response.indexOf("250") == -1) {
 			this.handleError(response);
 		} else {
-			this.successMessage = response.substring(response.indexOf("\""));
+			this.successMessage = "Changed directory to \"" + this.targetDirectory + "\"";
 			return true;
 		}
 		return false;

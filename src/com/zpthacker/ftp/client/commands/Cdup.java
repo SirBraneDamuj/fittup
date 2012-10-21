@@ -17,7 +17,6 @@ public class Cdup extends Command {
 			this.handleError(response);
 			return false;
 		} else {
-			this.successMessage = response.substring(response.indexOf("\""));
 			return true;
 		}
 	}
@@ -28,7 +27,8 @@ public class Cdup extends Command {
 
 	@Override
 	public void printSuccessMessage() {
-		println(this.successMessage);
+		//don't show a success message for this
+//		println(this.successMessage);
 	}
 
 	@Override
