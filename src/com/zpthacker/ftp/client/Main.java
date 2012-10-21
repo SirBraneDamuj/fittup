@@ -8,27 +8,32 @@ import com.zpthacker.ftp.client.util.Logger;
 
 public class Main {
 	public static void main(String[] args) {
-		if(args.length < 2 || args.length > 3) {
-			usageAndExit();
-		}
-		if(!Logger.initWithFilename(args[1])) {
-			usageAndExit("Error creating logger, make sure your file is correct");
-		}
-		String hostname = args[0];
-		int port = args.length == 3 ? Integer.parseInt(args[2]) : 21;
-		Client c = null;
 		try {
-			c = new Client(hostname, port);
-			String line = c.readLine();
-			while(line.indexOf("220 ") == -1) {
-				line = c.readLine();
+			if(args.length < 2 || args.length > 3) {
+				usageAndExit();
 			}
-		} catch(IOException e) {
-			usageAndExit("Error creating connection. Verify hostname and port and try again.");
+			if(!Logger.initWithFilename(args[1])) {
+				usageAndExit("Error creating logger, make sure your file is correct");
+			}
+			String hostname = args[0];
+			int port = args.length == 3 ? Integer.parseInt(args[2]) : 21;
+			Client c = null;
+			try {
+				c = new Client(hostname, port);
+				String line = c.readLine();
+				while(line.indexOf("220 ") == -1) {
+					line = c.readLine();
+				}
+			} catch(IOException e) {
+				usageAndExit("Error creating connection. Verify hostname and port and try again.");
+			}
+			CLI cli = new CLI(c);
+			cli.start();
+			Logger.close();
+		} catch(Exception e) {
+			Logger.close();
+			throw e;
 		}
-		CLI cli = new CLI(c);
-		cli.start();
-		Logger.close();
 	}
 	
 	private static void usageAndExit(String errorMessage) {
