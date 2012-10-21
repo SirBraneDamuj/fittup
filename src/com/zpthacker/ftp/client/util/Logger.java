@@ -26,6 +26,7 @@ public class Logger {
 	
 	public static void request(String request) {
 		instance.writeLine(formRequestLogLine(request));
+		instance.flush();
 	}
 	
 	private static String formRequestLogLine(String request) {
@@ -34,6 +35,7 @@ public class Logger {
 	
 	public static void response(String response) {
 		instance.writeLine(formResponseLogLine(response));
+		instance.flush();
 	}
 	
 	private static String formResponseLogLine(String response) {
@@ -63,6 +65,14 @@ public class Logger {
 		this.out.newLine();
 		} catch(IOException e) {
 			println("Error writing to file");
+		}
+	}
+	
+	private void flush() {
+		try {
+			this.out.flush();
+		} catch(IOException e) {
+			println("Flush error");
 		}
 	}
 	

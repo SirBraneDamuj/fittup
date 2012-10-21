@@ -1,12 +1,9 @@
 package com.zpthacker.ftp.client;
 
-import static com.zpthacker.ftp.client.util.ConsoleUtils.println;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 import com.zpthacker.ftp.client.util.Logger;
@@ -17,10 +14,9 @@ public class Client {
 	Socket clientSocket;
 	PrintStream out;
 	BufferedReader in;
-	boolean passive;
-	Socket pasvDataSocket;
-	Socket portDataSocket;
-	ServerSocket ssock;
+	boolean passive = true;
+	DataConnection conn;
+	int dataPort;
 	
 	public Client(String hostname, int port) throws IOException {
 		this.hostname = hostname;
@@ -32,16 +28,11 @@ public class Client {
 	
 	public void setPassiveOff(int port) {
 		this.passive = false;
-		this.ssock = this.getPortServerSocket(port);
+		this.dataPort = port;
 	}
 	
-	public void setPassiveOn(String ip, int port) {
+	public void setPassiveOn() {
 		this.passive = true;
-		this.pasvDataSocket = this.getPassiveSocket(ip, port);
-	}
-	
-	public boolean transferReady() {
-		return this.pasvDataSocket != null || this.passive == false;
 	}
 	
 	public String user(String user) {
@@ -72,43 +63,59 @@ public class Client {
 		return this.writeCommand("cdup");
 	}
 	
+	private void createConnection() {
+		if(this.conn != null) {
+			this.conn.close();
+		}
+		if(this.passive) {
+			this.pasv();
+		} else {
+			this.port();
+		}
+	}
+	
 	public String list(String argument) {
+		this.createConnection();
 		String command = "list";
 		if(argument != null) {
 			command += " " + argument;
 		}
+		Socket socket = null;
 		if(this.passive) {
-			return this.passiveList(command);
+			socket = this.conn.getSocket();
+		}
+		String response = this.writeCommand(command);
+		if(!this.passive) {
+			socket = this.conn.getSocket();
+		}
+		if(response.indexOf("150") != -1) {
+			String data = this.readDataSocket(socket);
+			try {
+				response = this.readLine();
+				if(response.indexOf("226") == -1) {
+					return null;
+				} else {
+					return data;
+				}
+			} catch(IOException e) {
+				return null;
+			}
 		} else {
-			return this.portList(command);
+			return null;
 		}
 	}
 	
-	private String passiveList(String command) {
-		String response = this.writeCommand(command);
-		return response;
+	public void pasv() {
+		String response = this.writeCommand("pasv");
+		this.conn = new PassiveConnection(response);
 	}
 	
-	private String portList(String command) {
-		String response = this.writeCommand(command);
-		this.portDataSocket = this.getPortDataSocket();
-		try {
-			this.portDataSocket.close();
-		} catch(IOException e) {
-			/* swallow */
-		}
-		return response;
-	}
-	
-	public String pasv() {
-		return this.writeCommand("pasv");
-	}
-	
-	public String port(int port) {
-		String portString = "," + Integer.toString(port/256) + ",";
-		portString += port % 256;
+	public void port() {
+		String portString = "," + Integer.toString(this.dataPort/256) + ",";
+		portString += this.dataPort % 256;
 		String argString = this.clientSocket.getLocalAddress().toString().substring(1).replaceAll("\\.", ",") + portString;
-		return this.writeCommand("port " + argString);
+		this.writeCommand("port " + argString);
+		this.conn = new PortConnection(this.dataPort);
 	}
 	
 	public String help() {
@@ -132,15 +139,7 @@ public class Client {
 		this.out.close();
 		this.in.close();
 		this.clientSocket.close();
-		if(this.ssock != null) {
-			this.ssock.close();
-		}
-		if(this.portDataSocket != null) {
-			this.portDataSocket.close();
-		}
-		if(this.pasvDataSocket != null) {
-			this.pasvDataSocket.close();
-		}
+		this.conn.close();
 	}
 	
 	public void printLine(String line) {
@@ -158,29 +157,20 @@ public class Client {
 		return in.ready();
 	}
 	
-	public Socket getPassiveSocket(String ip, int port) {
+	public String readDataSocket(Socket socket) {
 		try {
-			return new Socket(ip, port);
+			BufferedReader dataIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			String data = "";
+			while(true) {
+				String buf = dataIn.readLine();
+				if(buf == null) {
+					break;
+				}
+				data += buf + "\n";
+			}
+			dataIn.close();
+			return data;
 		} catch(IOException e) {
-			println("Unable to establish data connection");
-			return null;
-		}
-	}
-	
-	public ServerSocket getPortServerSocket(int port) {
-		try {
-			return new ServerSocket(port);
-		} catch(IOException e) {
-			println("Unable to establish data connection");
-			return null;
-		}
-	}
-	
-	public Socket getPortDataSocket() {
-		try {
-			return this.ssock.accept();
-		} catch(IOException e) {
-			println("Unable to establish data connection");
 			return null;
 		}
 	}

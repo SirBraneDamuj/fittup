@@ -31,8 +31,9 @@ public class Main {
 			cli.start();
 			Logger.close();
 		} catch(Exception e) {
-			Logger.close();
 			throw e;
+		} finally {
+			Logger.close();
 		}
 	}
 	
