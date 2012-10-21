@@ -1,5 +1,6 @@
 package com.zpthacker.ftp.client.commands;
 
+import static com.zpthacker.ftp.client.util.ConsoleUtils.println;
 import com.zpthacker.ftp.client.Client;
 import com.zpthacker.ftp.client.Command;
 
@@ -13,8 +14,14 @@ public class Ls extends Command {
 
 	@Override
 	public boolean execute(Client c) {
-		// TODO Auto-generated method stub
-		return false;
+		if(c.transferReady()) {
+			String response = c.list(this.listArgument);
+			println(response);
+			return true;
+		} else {
+			println("Data transfer not ready. Call passive on/off first.");
+			return false;
+		}
 	}
 
 	@Override
@@ -31,6 +38,8 @@ public class Ls extends Command {
 		}
 		if(tokens.length == 2) {
 			this.listArgument = tokens[1];
+		} else {
+			this.listArgument = null;
 		}
 		this.valid = true;
 	}

@@ -1,9 +1,12 @@
 package com.zpthacker.ftp.client;
 
+import static com.zpthacker.ftp.client.util.ConsoleUtils.println;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 import com.zpthacker.ftp.client.util.Logger;
@@ -15,8 +18,9 @@ public class Client {
 	PrintStream out;
 	BufferedReader in;
 	boolean passive;
-	String pasvIp;
-	int pasvPort;
+	Socket pasvDataSocket;
+	Socket portDataSocket;
+	ServerSocket ssock;
 	
 	public Client(String hostname, int port) throws IOException {
 		this.hostname = hostname;
@@ -26,14 +30,18 @@ public class Client {
 		this.in = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
 	}
 	
-	public void setPassive(boolean passive) {
-		this.passive = passive;
+	public void setPassiveOff(int port) {
+		this.passive = false;
+		this.ssock = this.getPortServerSocket(port);
 	}
 	
-	public void setPassive(boolean passive, String ip, int port) {
-		this.pasvIp = ip;
-		this.pasvPort = port;
-		this.setPassive(passive);
+	public void setPassiveOn(String ip, int port) {
+		this.passive = true;
+		this.pasvDataSocket = this.getPassiveSocket(ip, port);
+	}
+	
+	public boolean transferReady() {
+		return this.pasvDataSocket != null || this.passive == false;
 	}
 	
 	public String user(String user) {
@@ -64,14 +72,42 @@ public class Client {
 		return this.writeCommand("cdup");
 	}
 	
+	public String list(String argument) {
+		String command = "list";
+		if(argument != null) {
+			command += " " + argument;
+		}
+		if(this.passive) {
+			return this.passiveList(command);
+		} else {
+			return this.portList(command);
+		}
+	}
+	
+	private String passiveList(String command) {
+		String response = this.writeCommand(command);
+		return response;
+	}
+	
+	private String portList(String command) {
+		String response = this.writeCommand(command);
+		this.portDataSocket = this.getPortDataSocket();
+		try {
+			this.portDataSocket.close();
+		} catch(IOException e) {
+			/* swallow */
+		}
+		return response;
+	}
+	
 	public String pasv() {
 		return this.writeCommand("pasv");
 	}
 	
-	public String port(String ip, int port) {
+	public String port(int port) {
 		String portString = "," + Integer.toString(port/256) + ",";
 		portString += port % 256;
-		String argString = ip.replaceAll("\\.", ",") + portString;
+		String argString = this.clientSocket.getLocalAddress().toString().replaceAll("\\.", ",") + portString;
 		return this.writeCommand("port " + argString);
 	}
 	
@@ -111,6 +147,33 @@ public class Client {
 	
 	public boolean standby() throws IOException {
 		return in.ready();
+	}
+	
+	public Socket getPassiveSocket(String ip, int port) {
+		try {
+			return new Socket(ip, port);
+		} catch(IOException e) {
+			println("Unable to establish data connection");
+			return null;
+		}
+	}
+	
+	public ServerSocket getPortServerSocket(int port) {
+		try {
+			return new ServerSocket(port);
+		} catch(IOException e) {
+			println("Unable to establish data connection");
+			return null;
+		}
+	}
+	
+	public Socket getPortDataSocket() {
+		try {
+			return this.ssock.accept();
+		} catch(IOException e) {
+			println("Unable to establish data connection");
+			return null;
+		}
 	}
 	
 	public String getInfo() {
