@@ -1,4 +1,8 @@
 Fittup - lousy FTP client for CS 472
+Zachary Thacker
+CS472 ASsignment 2a
+10/22/2012
+
 How to run:
 ./compile.sh
 ./run.sh SERVER_HOSTNAME LOG_FILENAME [PORT]
