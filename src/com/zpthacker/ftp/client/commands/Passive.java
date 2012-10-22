@@ -44,20 +44,27 @@ public class Passive extends Command {
 	@Override
 	protected void interpretTokens(String[] tokens) {
 		if(tokens.length < 2) { //if the command has fewer than two tokens
-			this.failureMessage = "Invalid syntax";
+			this.failureMessage = "Invalid syntax - missing \"on\" or \"off\" option";
 			return;
 		} else if(tokens[1].toLowerCase().equals("on")) { //if the second token is "on"
 			if(tokens.length != 2) { //and the number of tokens is not 2
-				this.failureMessage = "Invalid syntax";
+				this.failureMessage = "Invalid syntax - too many tokens for \"on\" option";
 				return;
 			}
 			this.isPassive = true;
 		} else if(tokens[1].toLowerCase().equals("off")) { //if the second token is "off"
 			if(tokens.length > 3) { //and the number of tokens is greater than 3
-				this.failureMessage = "Invalid syntax";
+				this.failureMessage = "Invalid syntax - too many tokens for \"off\" option";
 				return;
 			} else if(tokens.length == 3) { //or the number of tokens is equal to 3
 				this.port = Integer.parseInt(tokens[2]);
+				//In a h1,h2,h3,h4,p1,p2 string, no numbers are permitted to be 0 according to the formal spec
+				//This means that the minimum port number allowed is
+				//256 * 1 + 1 = 257
+				if(this.port < 257 || this.port > 65536) { //if the port is not in the expected range
+					this.failureMessage = "Invalid syntax - port must be between 257 and 65536";
+					return;
+				}
 			} else { //number of tokens is 2
 				this.port = 9000;
 			}

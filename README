@@ -1,1 +1,12 @@
 Fittup - lousy FTP client for CS 472
+How to run:
+./compile.sh
+./run.sh SERVER_HOSTNAME LOG_FILENAME [PORT]
+
+The client starts data transfers in passive mode by default.
+Use "passive off" to disable passive mode.
+Use "passive off PORTNUMBER" to disable passive mode and specify a port number.
+Example: "passive off 30123" enables PORT mode on port number 30123.
+
+Use "help" to get a list of available commands
+Use "help COMMAND" to get usage information for that command.
