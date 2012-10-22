@@ -1,0 +1,77 @@
+Tested using a local Filezilla server
+
+-----------------------CONSOLE---------------------------------
+Username: zach
+Password: zaq12wsx
+Successfully connected to 192.168.1.133:21
+[192.168.1.133:21] ftp> ls
+-rw-r--r-- 1 ftp ftp           7414 Oct 22 02:01 A2.txt
+drwxr-xr-x 1 ftp ftp              0 Oct 20 21:18 fraggle
+-rw-r--r-- 1 ftp ftp           3957 Oct 19 00:26 OathOfUnion.ftm
+-rw-r--r-- 1 ftp ftp         867484 Oct 19 00:39 OathOfUnion2.wav
+drwxr-xr-x 1 ftp ftp              0 Oct 20 19:43 raggle
+-rw-r--r-- 1 ftp ftp        4126860 Oct 22 02:40 throwback.mp3
+[192.168.1.133:21] ftp> cd raggle
+Changed directory to "raggle"
+[192.168.1.133:21] ftp> ls
+[192.168.1.133:21] ftp> cdup
+[192.168.1.133:21] ftp> pwd
+"/" is current directory.
+[192.168.1.133:21] ftp> get /throwback.mp3
+Successfully retrieved file.
+[192.168.1.133:21] ftp> ls /throwback.mp3
+-rw-r--r-- 1 ftp ftp        4126860 Oct 22 02:40 throwback.mp3
+[192.168.1.133:21] ftp> passive mode off
+Invalid syntax
+passive - toggle passive on or off
+USAGE: passive (on)|(off [PORT=9000])
+passive on needs no more arguments
+passive off takes an optional port, otherwise it uses 9000
+[192.168.1.133:21] ftp> passive off
+Passive mode disabled. Port set to 9000
+[192.168.1.133:21] ftp> get A2.txt
+Successfully retrieved file.
+[192.168.1.133:21] ftp> quit
+
+
+-------------------------------LOGFILE--------------------------
+[10-22-2012 11:05:22][RESPONSE] 220-FileZilla Server version 0.9.41 beta
+[10-22-2012 11:05:22][RESPONSE] 220-written by Tim Kosse (Tim.Kosse@gmx.de)
+[10-22-2012 11:05:22][RESPONSE] 220 Please visit http://sourceforge.net/projects/filezilla/
+[10-22-2012 11:05:28][REQUEST] user zach
+[10-22-2012 11:05:28][RESPONSE] 331 Password required for zach
+[10-22-2012 11:05:28][REQUEST] pass zaq12wsx
+[10-22-2012 11:05:29][RESPONSE] 230 Logged on
+[10-22-2012 11:05:29][REQUEST] type I
+[10-22-2012 11:05:29][RESPONSE] 200 Type set to I
+[10-22-2012 11:05:33][REQUEST] pasv
+[10-22-2012 11:05:34][RESPONSE] 227 Entering Passive Mode (192,168,1,133,200,108)
+[10-22-2012 11:05:34][REQUEST] list
+[10-22-2012 11:05:34][RESPONSE] 150 Connection accepted
+[10-22-2012 11:05:34][RESPONSE] 226 Transfer OK
+[10-22-2012 11:05:51][REQUEST] cwd raggle
+[10-22-2012 11:05:51][RESPONSE] 250 CWD successful. "/raggle" is current directory.
+[10-22-2012 11:05:52][REQUEST] pasv
+[10-22-2012 11:05:52][RESPONSE] 227 Entering Passive Mode (192,168,1,133,200,109)
+[10-22-2012 11:05:52][REQUEST] list
+[10-22-2012 11:05:53][RESPONSE] 150 Connection accepted
+[10-22-2012 11:05:53][RESPONSE] 226 Transfer OK
+[10-22-2012 11:05:55][REQUEST] cdup
+[10-22-2012 11:05:56][RESPONSE] 200 CDUP successful. "/" is current directory.
+[10-22-2012 11:06:01][REQUEST] pwd
+[10-22-2012 11:06:01][RESPONSE] 257 "/" is current directory.
+[10-22-2012 11:06:15][REQUEST] pasv
+[10-22-2012 11:06:15][RESPONSE] 227 Entering Passive Mode (192,168,1,133,200,110)
+[10-22-2012 11:06:15][REQUEST] retr /throwback.mp3
+[10-22-2012 11:06:16][RESPONSE] 150 Connection accepted
+[10-22-2012 11:06:26][RESPONSE] 226 Transfer OK
+[10-22-2012 11:06:33][REQUEST] pasv
+[10-22-2012 11:06:33][RESPONSE] 227 Entering Passive Mode (192,168,1,133,200,111)
+[10-22-2012 11:06:33][REQUEST] list /throwback.mp3
+[10-22-2012 11:06:33][RESPONSE] 150 Connection accepted
+[10-22-2012 11:06:33][RESPONSE] 226 Transfer OK
+[10-22-2012 11:07:01][REQUEST] port 192,168,1,141,35,40
+[10-22-2012 11:07:01][RESPONSE] 200 Port command successful
+[10-22-2012 11:07:01][REQUEST] retr A2.txt
+[10-22-2012 11:07:01][RESPONSE] 150 Opening data channel for file transfer.
+[10-22-2012 11:07:01][RESPONSE] 226 Transfer OK

@@ -74,9 +74,14 @@ public class Login extends Command {
 	}
 	
 	@Override
-	protected void usage() {
-		println("login - login to the server using a username and password");
+	public void usage() {
+		this.oneLineSummary();
 		println("USAGE: login USERNAME PASSWORD");
+	}
+
+	@Override
+	public void oneLineSummary() {
+		println("login - login to the server using a username and password");		
 	}
 
 }

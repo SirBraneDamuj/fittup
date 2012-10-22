@@ -22,6 +22,10 @@ public class Pwd extends Command {
 		super(tokens);
 	}
 
+	public Pwd() {
+		super();
+	}
+
 	@Override
 	public boolean execute(Client c) {
 		String response = c.pwd();
@@ -44,9 +48,14 @@ public class Pwd extends Command {
 	}
 
 	@Override
-	protected void usage() {
-		println("pwd - print working directory");
+	public void usage() {
+		this.oneLineSummary();
 		println("USAGE: pwd (no arguments)");
+	}
+
+	@Override
+	public void oneLineSummary() {
+		println("pwd - print working directory");
 	}
 
 }

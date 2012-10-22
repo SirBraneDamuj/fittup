@@ -21,6 +21,10 @@ public class Cdup extends Command {
 		super(tokens);
 	}
 
+	public Cdup() {
+		super();
+	}
+
 	@Override
 	public boolean execute(Client c) {
 		String response = c.cdup();
@@ -52,9 +56,14 @@ public class Cdup extends Command {
 	}
 
 	@Override
-	protected void usage() {
-		println("cdup - change to parent directory");
+	public void usage() {
+		this.oneLineSummary();
 		println("USAGE: cdup (no arguments");
+	}
+
+	@Override
+	public void oneLineSummary() {
+		println("cdup - change to parent directory");		
 	}
 
 }

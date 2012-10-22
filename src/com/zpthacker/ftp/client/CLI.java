@@ -16,6 +16,7 @@ import static com.zpthacker.ftp.client.util.ConsoleUtils.readLine;
 import com.zpthacker.ftp.client.commands.Cd;
 import com.zpthacker.ftp.client.commands.Cdup;
 import com.zpthacker.ftp.client.commands.Get;
+import com.zpthacker.ftp.client.commands.Help;
 import com.zpthacker.ftp.client.commands.Ls;
 import com.zpthacker.ftp.client.commands.Mkdir;
 import com.zpthacker.ftp.client.commands.Passive;
@@ -61,7 +62,7 @@ public class CLI {
 	/*
 	 * creates a command object based on the first token of the user's command
 	 */
-	private Command createCommand(String command) {
+	public static Command createCommand(String command) {
 		String[] tokens = command.split(" ");
 		switch(tokens[0].toLowerCase()) {
 			case "pwd":
@@ -80,6 +81,8 @@ public class CLI {
 				return new Get(tokens);
 			case "quit":
 				return null;
+			case "help":
+				return new Help(tokens);
 			default:
 				return new Unknown(tokens);
 		}

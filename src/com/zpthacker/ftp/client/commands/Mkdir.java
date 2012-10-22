@@ -22,6 +22,10 @@ public class Mkdir extends Command {
 		super(tokens);
 	}
 	
+	public Mkdir() {
+		super();
+	}
+
 	@Override
 	public boolean execute(Client c) {
 		String response = c.mkd(this.directoryArg);
@@ -49,11 +53,16 @@ public class Mkdir extends Command {
 	}
 
 	@Override
-	protected void usage() {
-		println("mkdir - create a new directory");
+	public void usage() {
+		this.oneLineSummary();
 		println("USAGE: mkdir DIRECTORY_NAME");
 		println("If you provide a relative path, it is created inside the current working directory.");
 		println("If you provide an absolute path, it is created at that absolute path.");
+	}
+
+	@Override
+	public void oneLineSummary() {
+		println("mkdir - create a new directory");
 	}
 
 }

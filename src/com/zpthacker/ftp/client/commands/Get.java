@@ -24,6 +24,10 @@ public class Get extends Command {
 		super(tokens);
 	}
 
+	public Get() {
+		super();
+	}
+
 	@Override
 	public boolean execute(Client c) {
 		boolean response = c.retr(this.path);
@@ -47,11 +51,16 @@ public class Get extends Command {
 	}
 
 	@Override
-	protected void usage() {
-		println("get - download file");
+	public void usage() {
+		this.oneLineSummary();
 		println("USAGE: get PATH");
 		println("File downloads directly to a local file of the same name.");
 
+	}
+
+	@Override
+	public void oneLineSummary() {
+		println("get - download file");
 	}
 
 }

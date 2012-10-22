@@ -17,6 +17,7 @@ public class Unknown extends Command {
 	
 	public Unknown(String[] tokens) {
 		super(tokens);
+		this.command = "unknown";
 	}
 
 	@Override
@@ -31,7 +32,12 @@ public class Unknown extends Command {
 	}
 
 	@Override
-	protected void usage() {
+	public void usage() {
+		/* no op */
+	}
+
+	@Override
+	public void oneLineSummary() {
 		/* no op */
 	}
 }

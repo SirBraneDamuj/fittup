@@ -24,6 +24,10 @@ public class Passive extends Command {
 		super(tokens);
 	}
 
+	public Passive() {
+		super();
+	}
+
 	@Override
 	public boolean execute(Client c) {
 		if(this.isPassive) {
@@ -66,11 +70,16 @@ public class Passive extends Command {
 	}
 
 	@Override
-	protected void usage() {
-		println("passive - toggle passive on or off");
+	public void usage() {
+		this.oneLineSummary();
 		println("USAGE: passive (on)|(off [PORT=9000])");
 		println("passive on needs no more arguments");
 		println("passive off takes an optional port, otherwise it uses 9000");
+	}
+
+	@Override
+	public void oneLineSummary() {
+		println("passive - toggle passive on or off");
 	}
 
 }

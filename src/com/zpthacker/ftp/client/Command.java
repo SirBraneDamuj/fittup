@@ -48,5 +48,7 @@ public abstract class Command {
 	//parses the tokens and fills out the fields for this command
 	protected abstract void interpretTokens(String[] tokens);
 	//prints some handy information about this command
-	protected abstract void usage();
+	public abstract void usage();
+	//used by help to give a summary of all commands
+	public abstract void oneLineSummary();
 }

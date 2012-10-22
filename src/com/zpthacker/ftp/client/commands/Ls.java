@@ -22,6 +22,10 @@ public class Ls extends Command {
 		super(tokens);
 	}
 
+	public Ls() {
+		super();
+	}
+
 	@Override
 	public boolean execute(Client c) {
 		boolean response = c.list(this.listArgument);
@@ -53,12 +57,17 @@ public class Ls extends Command {
 	}
 
 	@Override
-	protected void usage() {
-		println("ls - list contents");
+	public void usage() {
+		this.oneLineSummary();
 		println("USAGE: ls [FILENAME]");
 		println("Lists contents of current working directory");
 		println("Lists information about FILENAME if provided");
 
+	}
+
+	@Override
+	public void oneLineSummary() {
+		println("ls - list contents");
 	}
 
 }

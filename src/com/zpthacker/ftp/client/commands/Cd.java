@@ -23,6 +23,10 @@ public class Cd extends Command {
 		super(tokens);
 	}
 
+	public Cd() {
+		super();
+	}
+
 	@Override
 	public boolean execute(Client c) {
 		String response = c.cwd(this.targetDirectory);
@@ -55,10 +59,15 @@ public class Cd extends Command {
 	}
 
 	@Override
-	protected void usage() {
-		println("cd - change working directory");
+	public void usage() {
+		this.oneLineSummary();
 		println("USAGE: cd DIRECTORY_NAME");
 		println("DIRECTORY_NAME can be either a relative or absolute path");
+	}
+
+	@Override
+	public void oneLineSummary() {
+		println("cd - change working directory");
 	}
 
 }
