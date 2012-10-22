@@ -89,6 +89,6 @@ public class CLI {
 	}
 	
 	private String getPrompt() {
-		return "[" + this.client.getInfo() + "] ftp> ";
+		return "[" + this.client.getInfo() + "] ftp (" + this.client.pwd() + ")> ";
 	}
 }

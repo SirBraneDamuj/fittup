@@ -29,13 +29,12 @@ public class Pwd extends Command {
 	@Override
 	public boolean execute(Client c) {
 		String response = c.pwd();
-		if(response.indexOf("257") != -1) {
-			this.successMessage = response.substring(4); //remove status code from response to get pwd message
-			return true;
-		} else {
+		if(response == null) {
 			this.failureMessage = "PWD failed...something's really messed up here.";
 			return false;
 		}
+		this.successMessage = response;
+		return true;
 	}
 
 	@Override

@@ -72,7 +72,13 @@ public class Client {
 	}
 	
 	public String pwd() {
-		return this.writeCommand("pwd");
+		String response = this.writeCommand("pwd");
+		if(response.indexOf("257") == -1) {
+			return null;
+		}
+		int start = response.indexOf("\"");
+		int end = response.indexOf("\"", start+1);
+		return response.substring(start+1, end);
 	}
 	
 	public String mkd(String directoryArg) {
@@ -120,6 +126,7 @@ public class Client {
 		try {
 			FileOutputStream out = FileUtils.getFileOutputStream(path);
 			//send data connection data into a file
+			println("Initiating data connection...please wait...");
 			boolean result = this.getData(command, out);
 			out.close();
 			return result;
@@ -255,6 +262,6 @@ public class Client {
 	}
 	
 	public String getInfo() {
-		return this.hostname + ":" + port;
+		return this.hostname + ":" + this.port;
 	}
 }
