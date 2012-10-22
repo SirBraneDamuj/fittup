@@ -80,6 +80,19 @@ public class Client {
 		if(argument != null) {
 			command += " " + argument;
 		}
+		return this.getData(command);
+	}
+	
+	public String retr(String path) {
+		if(path == null) {
+			return null;
+		}
+		this.createConnection();
+		String command = "retr " + path;
+		return this.getData(command);
+	}
+	
+	private String getData(String command) {
 		Socket socket = null;
 		if(this.passive) {
 			socket = this.conn.getSocket();
