@@ -1,3 +1,13 @@
+/*
+ * Zachary Thacker
+ * CS472 Assignment 2a
+ * 10/22/2012
+ * 
+ * Cd.java
+ * Represents the cd command
+ * Extends Command
+ */
+
 package com.zpthacker.ftp.client.commands;
 
 import static com.zpthacker.ftp.client.util.ConsoleUtils.println;
@@ -6,6 +16,7 @@ import com.zpthacker.ftp.client.Command;
 
 public class Cd extends Command {
 	
+	//the directory that the user is switching to
 	private String targetDirectory;
 	
 	public Cd(String[] tokens) {
@@ -15,6 +26,7 @@ public class Cd extends Command {
 	@Override
 	public boolean execute(Client c) {
 		String response = c.cwd(this.targetDirectory);
+		//if we don't receive an expected response code
 		if(response == null || (response.indexOf("250") == -1 && response.indexOf("200") == -1)) {
 			this.handleError(response);
 			return false;

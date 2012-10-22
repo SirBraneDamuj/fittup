@@ -1,3 +1,13 @@
+/*
+ * Zachary Thacker
+ * CS472 Assignment 2a
+ * 10/22/2012
+ * 
+ * PassiveConnection.java
+ * Represents a connection established in passive mode.
+ * Parses the h1,h2,h3,h4,p1,p2 address response and creates an appropriate socket.
+ */
+
 package com.zpthacker.ftp.client;
 
 import java.io.IOException;
@@ -52,6 +62,9 @@ public class PassiveConnection extends DataConnection {
 		}
 	}
 	
+	/*
+	 * Uses a regex to extract the address string from the PASV response.
+	 */
 	private String extractIPAndPortInfoFromPasvResponse(String response) {
 		Pattern p = Pattern.compile("(\\d{1,3},){5}\\d{1,3}");
 		Matcher m = p.matcher(response);
@@ -62,6 +75,9 @@ public class PassiveConnection extends DataConnection {
 		}
 	}
 	
+	/*
+	 * From the PASV address string, extracts the IP address.
+	 */
 	private String extractIPFromPasvString(String pasvString) {
 		Pattern p = Pattern.compile("\\d{1,3}");
 		Matcher m = p.matcher(pasvString);
@@ -78,6 +94,12 @@ public class PassiveConnection extends DataConnection {
 		return ip;
 	}
 	
+	/*
+	 * From the PASV address string, extracts the port number.
+	 * From a string h1,h2,h3,h4,p1,p2
+	 * Where h1.h2.h3.h4 is the IP address
+	 * the port number is 256 * p1 + p2
+	 */
 	private int extractPortFromPasvString(String pasvString) {
 		Pattern p = Pattern.compile("\\d{1,3}");
 		Matcher m = p.matcher(pasvString);

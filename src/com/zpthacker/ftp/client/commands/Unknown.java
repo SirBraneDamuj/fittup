@@ -1,3 +1,13 @@
+/*
+ * Zachary Thacker
+ * CS472 Assignment 2a
+ * 10/22/2012
+ * 
+ * Unknown.java
+ * Represents an unknown command
+ * It simply exists to spit out an error message
+ */
+
 package com.zpthacker.ftp.client.commands;
 
 import com.zpthacker.ftp.client.Client;

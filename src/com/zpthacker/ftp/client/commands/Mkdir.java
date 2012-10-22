@@ -1,3 +1,13 @@
+/*
+ * Zachary Thacker
+ * CS472 Assignment 2a
+ * 10/22/2012
+ * 
+ * Mkdir.java
+ * Represents the mkdir command
+ * Creates a new directory
+ */
+
 package com.zpthacker.ftp.client.commands;
 
 import static com.zpthacker.ftp.client.util.ConsoleUtils.println;

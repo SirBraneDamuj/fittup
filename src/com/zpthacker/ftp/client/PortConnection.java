@@ -1,3 +1,14 @@
+/*
+ * Zachary Thacker
+ * CS472 Assignment 2a
+ * 10/22/2012
+ * 
+ * PortConnection.java
+ * Represents a PORT data connection.
+ * Uses a ServerSocket to listen on a port number
+ * Returns a Socket once a connection has been established.
+ */
+
 package com.zpthacker.ftp.client;
 
 import java.io.IOException;
@@ -6,7 +17,7 @@ import java.net.Socket;
 
 public class PortConnection extends DataConnection {
 	
-	private ServerSocket ssock;
+	private ServerSocket ssock; //PORT mode listens on a port for a connection from the server
 	private Socket socket;
 	private int port;
 	

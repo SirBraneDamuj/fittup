@@ -1,3 +1,13 @@
+/*
+ * Zachary Thacker
+ * CS472 Assignment 2a
+ * 10/22/2012
+ * 
+ * Ls.java
+ * represents the ls command
+ * lists CWD contents or file details
+ */
+
 package com.zpthacker.ftp.client.commands;
 
 import static com.zpthacker.ftp.client.util.ConsoleUtils.println;
@@ -34,9 +44,9 @@ public class Ls extends Command {
 			this.failureMessage = "Invalid syntax";
 			return;
 		}
-		if(tokens.length == 2) {
+		if(tokens.length == 2) { //two tokens means the user specified an argument
 			this.listArgument = tokens[1];
-		} else {
+		} else { //one token means they want CWD's directory
 			this.listArgument = null;
 		}
 		this.valid = true;

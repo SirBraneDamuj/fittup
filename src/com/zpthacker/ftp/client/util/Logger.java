@@ -1,3 +1,12 @@
+/*
+ * Zachary Thacker
+ * CS472 Assignment 2a
+ * 10/22/2012
+ * 
+ * Logger.java
+ * Static logging utility
+ */
+
 package com.zpthacker.ftp.client.util;
 
 import static com.zpthacker.ftp.client.util.ConsoleUtils.println;
@@ -11,6 +20,7 @@ import java.util.Date;
 public class Logger {
 	private static Logger instance;
 	
+	//create a logger with this filename
 	public static boolean initWithFilename(String filename) {
 		try {
 			instance = new Logger(filename);
@@ -24,6 +34,7 @@ public class Logger {
 		instance.closeStream();
 	}
 	
+	//write a request log
 	public static void request(String request) {
 		instance.writeLine(formRequestLogLine(request));
 		instance.flush();
@@ -33,6 +44,7 @@ public class Logger {
 		return formLogLine("[REQUEST] " + request);
 	}
 	
+	//write a response log
 	public static void response(String response) {
 		instance.writeLine(formResponseLogLine(response));
 		instance.flush();

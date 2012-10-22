@@ -1,3 +1,14 @@
+/*
+ * Zachary Thacker
+ * CS472 Assignment 2a
+ * 10/22/2012
+ * 
+ * Client.java
+ * Represents a client connection to the server.
+ * Responsible for formatting and sending requests as well as
+ * receiving and fielding responses.
+ */
+
 package com.zpthacker.ftp.client;
 
 import static com.zpthacker.ftp.client.util.ConsoleUtils.println;
@@ -19,11 +30,11 @@ public class Client {
 	String hostname;
 	int port;
 	Socket clientSocket;
-	PrintStream out;
-	BufferedReader in;
-	boolean passive = true;
-	DataConnection conn;
-	int dataPort;
+	PrintStream out; //the command output stream
+	BufferedReader in; //the command input stream
+	boolean passive = true; //default to passive mode
+	DataConnection conn; //the data connection object
+	int dataPort; //if we're in port mode, this is the port
 	
 	public Client(String hostname, int port) throws IOException {
 		this.hostname = hostname;

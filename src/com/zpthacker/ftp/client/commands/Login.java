@@ -1,3 +1,13 @@
+/*
+ * Zachary Thacker
+ * CS472 Assignment 2a
+ * 10/22/2012
+ * 
+ * Login.java
+ * Represents the login command
+ * No longer available in the CLI, but is still used to login initially.
+ */
+
 package com.zpthacker.ftp.client.commands;
 
 import static com.zpthacker.ftp.client.util.ConsoleUtils.*;
@@ -16,6 +26,7 @@ public class Login extends Command {
 
 	@Override
 	public boolean execute(Client c) {
+		//send a USER request, then follow up with a PASS request
 		if(this.sendUserRequest(c) && this.sendPassRequest(c)) {
 			this.successMessage = "Login successful";
 			return true;
@@ -26,7 +37,8 @@ public class Login extends Command {
 	
 	private boolean sendUserRequest(Client c) {
 		String response = c.user(this.username);
-		if(response == null || response.indexOf("331") == -1) {
+		//unexpected response code
+		if(response == null || (response.indexOf("331") == -1 && response.indexOf("230") == -1)) {
 			this.handleUserError(response);
 			return false;
 		}

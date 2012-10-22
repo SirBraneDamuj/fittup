@@ -1,3 +1,12 @@
+/*
+ * Zachary Thacker
+ * CS472 Assignment 2a
+ * 10/22/2012
+ * 
+ * CLI.java
+ * The CLI for the client. Acts as a factory for Command objects
+ */
+
 package com.zpthacker.ftp.client;
 
 import static com.zpthacker.ftp.client.util.ConsoleUtils.print;
@@ -26,24 +35,32 @@ public class CLI {
 		this.commandLoop();
 	}
 	
+	/*
+	 * simple input loop, waits for user input and then parses and handles it
+	 */
 	private void commandLoop() {
 		while(true) {
 			print(this.getPrompt());
 			String line = readLine();
-			if(line.equals("")) {
+			if(line.equals("")) { //user just hit enter
 				continue;
 			}
 			Command command = createCommand(line);
-			if(command == null) {
+			if(command == null) { //user entered "quit"
 				return;
 			} else if(command.isValid() && command.execute(this.client)) {
+				//the command had valid syntax and executed successfully
 				command.printSuccessMessage();
 			} else {
+				//the command was invalid or failed during execution
 				command.printFailureMessage();
 			}
 		}
 	}
 	
+	/*
+	 * creates a command object based on the first token of the user's command
+	 */
 	private Command createCommand(String command) {
 		String[] tokens = command.split(" ");
 		switch(tokens[0].toLowerCase()) {

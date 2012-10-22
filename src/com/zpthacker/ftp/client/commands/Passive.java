@@ -1,3 +1,13 @@
+/*
+ * Zachary Thacker
+ * CS472 Assignment 2a
+ * 10/22/2012
+ * 
+ * Passive.java
+ * Represents the passive command.
+ * Allows the user to switch between passive and port modes
+ */
+
 package com.zpthacker.ftp.client.commands;
 
 import static com.zpthacker.ftp.client.util.ConsoleUtils.println;
@@ -26,6 +36,7 @@ public class Passive extends Command {
 		return true;
 	}
 
+	//this one's a bit bumpy compared to the other commands
 	@Override
 	protected void interpretTokens(String[] tokens) {
 		if(tokens.length < 2) { //if the command has fewer than two tokens
