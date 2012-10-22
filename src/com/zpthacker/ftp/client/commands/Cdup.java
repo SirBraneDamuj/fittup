@@ -13,7 +13,7 @@ public class Cdup extends Command {
 	@Override
 	public boolean execute(Client c) {
 		String response = c.cdup();
-		if(response == null || response.indexOf("200") == -1) {
+		if(response == null || (response.indexOf("200") == -1 && response.indexOf("250") == -1)) {
 			this.handleError(response);
 			return false;
 		} else {
