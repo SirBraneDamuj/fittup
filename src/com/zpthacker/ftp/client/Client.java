@@ -1,11 +1,18 @@
 package com.zpthacker.ftp.client;
 
+import static com.zpthacker.ftp.client.util.ConsoleUtils.println;
+
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.Arrays;
 
+import com.zpthacker.ftp.client.util.FileUtils;
 import com.zpthacker.ftp.client.util.Logger;
 
 public class Client {
@@ -24,6 +31,14 @@ public class Client {
 		this.clientSocket = new Socket(hostname, port);
 		this.out = new PrintStream(this.clientSocket.getOutputStream());
 		this.in = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
+	}
+	
+	public void type(boolean flag) {
+		if(flag) {
+			this.writeCommand("type I");
+		} else {
+			this.writeCommand("type A");
+		}
 	}
 	
 	public void setPassiveOff(int port) {
@@ -74,25 +89,33 @@ public class Client {
 		}
 	}
 	
-	public String list(String argument) {
+	public boolean list(String argument) {
 		this.createConnection();
 		String command = "list";
 		if(argument != null) {
 			command += " " + argument;
 		}
-		return this.getData(command);
+		boolean result = this.getData(command, System.out);
+		return result;
 	}
 	
-	public String retr(String path) {
+	public boolean retr(String path) {
 		if(path == null) {
-			return null;
+			return false;
 		}
 		this.createConnection();
 		String command = "retr " + path;
-		return this.getData(command);
+		try {
+			FileOutputStream out = FileUtils.getFileOutputStream(path);
+			boolean result = this.getData(command, out);
+			out.close();
+			return result;
+		} catch(IOException e) {
+			return false;
+		}
 	}
 	
-	private String getData(String command) {
+	private boolean getData(String command, OutputStream out) {
 		Socket socket = null;
 		if(this.passive) {
 			socket = this.conn.getSocket();
@@ -102,24 +125,27 @@ public class Client {
 			socket = this.conn.getSocket();
 		}
 		if(response.indexOf("150") != -1) {
-			String data = this.readDataSocket(socket);
+			this.readDataSocket(socket, out);
 			try {
 				response = this.readLine();
 				if(response.indexOf("226") == -1) {
-					return null;
+					return false;
 				} else {
-					return data;
+					return true;
 				}
 			} catch(IOException e) {
-				return null;
+				return false;
 			}
 		} else {
-			return null;
+			return false;
 		}
 	}
 	
 	public void pasv() {
 		String response = this.writeCommand("pasv");
+		if(response.indexOf("227") == -1) {
+			println("PASV command failed");
+		}
 		this.conn = new PassiveConnection(response);
 	}
 	
@@ -127,7 +153,10 @@ public class Client {
 		String portString = "," + Integer.toString(this.dataPort/256) + ",";
 		portString += this.dataPort % 256;
 		String argString = this.clientSocket.getLocalAddress().toString().substring(1).replaceAll("\\.", ",") + portString;
-		this.writeCommand("port " + argString);
+		String response = this.writeCommand("port " + argString);
+		if(response.indexOf("200") == -1) {
+			println("PORT command failed");
+		}
 		this.conn = new PortConnection(this.dataPort);
 	}
 	
@@ -170,21 +199,23 @@ public class Client {
 		return in.ready();
 	}
 	
-	public String readDataSocket(Socket socket) {
+	public void readDataSocket(Socket socket, OutputStream out) {
+		int bufSize = 512;
 		try {
-			BufferedReader dataIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			String data = "";
+			InputStream dataIn = socket.getInputStream();
 			while(true) {
-				String buf = dataIn.readLine();
-				if(buf == null) {
+				byte[] buf = new byte[bufSize];
+				int count = dataIn.read(buf);
+				if(count == -1) {
 					break;
+				} else if(count < bufSize) {
+					buf = Arrays.copyOfRange(buf, 0, count);
 				}
-				data += buf + "\n";
+				out.write(buf);
 			}
-			dataIn.close();
-			return data;
+			socket.close();
 		} catch(IOException e) {
-			return null;
+			return;
 		}
 	}
 	

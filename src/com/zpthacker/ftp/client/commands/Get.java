@@ -4,7 +4,6 @@ import static com.zpthacker.ftp.client.util.ConsoleUtils.println;
 
 import com.zpthacker.ftp.client.Client;
 import com.zpthacker.ftp.client.Command;
-import com.zpthacker.ftp.client.util.FileUtils;
 
 public class Get extends Command {
 	
@@ -16,13 +15,12 @@ public class Get extends Command {
 
 	@Override
 	public boolean execute(Client c) {
-		String response = c.retr(this.path);
-		if(response == null) {
+		boolean response = c.retr(this.path);
+		if(!response) {
 			this.failureMessage = "Error retrieving file";
 			return false;			
 		} else {
 			this.successMessage = "Successfully retrieved file.";
-			FileUtils.writeFile(this.path, response);
 			return true;
 		}
 	}

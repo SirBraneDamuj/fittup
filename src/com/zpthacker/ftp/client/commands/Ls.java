@@ -1,7 +1,6 @@
 package com.zpthacker.ftp.client.commands;
 
-import static com.zpthacker.ftp.client.util.ConsoleUtils.print;
-
+import static com.zpthacker.ftp.client.util.ConsoleUtils.println;
 import com.zpthacker.ftp.client.Client;
 import com.zpthacker.ftp.client.Command;
 
@@ -15,9 +14,8 @@ public class Ls extends Command {
 
 	@Override
 	public boolean execute(Client c) {
-		String response = c.list(this.listArgument);
-		if(response != null) {
-			this.successMessage = response;
+		boolean response = c.list(this.listArgument);
+		if(response) {
 			return true;
 		} else {
 			this.failureMessage = "Error retrieving contents";
@@ -27,7 +25,7 @@ public class Ls extends Command {
 
 	@Override
 	public void printSuccessMessage() {
-		print(this.successMessage); //print instead of println - response has /n at the end
+		/* no op - the ls command already output the info */
 	}
 
 	@Override
@@ -46,7 +44,10 @@ public class Ls extends Command {
 
 	@Override
 	protected void usage() {
-		// TODO Auto-generated method stub
+		println("ls - list contents");
+		println("USAGE: ls [FILENAME]");
+		println("Lists contents of current working directory");
+		println("Lists information about FILENAME if provided");
 
 	}
 

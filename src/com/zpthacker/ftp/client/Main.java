@@ -30,6 +30,7 @@ public class Main {
 				usageAndExit("Error creating connection. Verify hostname and port and try again.");
 			}
 			if(login(c)) {
+				c.type(true);
 				CLI cli = new CLI(c);
 				cli.start();
 			} else {
