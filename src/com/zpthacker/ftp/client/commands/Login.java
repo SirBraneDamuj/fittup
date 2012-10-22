@@ -16,7 +16,12 @@ public class Login extends Command {
 
 	@Override
 	public boolean execute(Client c) {
-		return this.sendUserRequest(c) && this.sendPassRequest(c);
+		if(this.sendUserRequest(c) && this.sendPassRequest(c)) {
+			this.successMessage = "Login successful";
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	private boolean sendUserRequest(Client c) {
@@ -29,13 +34,12 @@ public class Login extends Command {
 	}
 	
 	private void handleUserError(String response) {
-		println("USER command error. Username may not exist.");
-		usage();
+		this.failureMessage = "Username was not accepted.";
 	}
 	
 	private boolean sendPassRequest(Client c) {
 		String response = c.pass(this.password);
-		if(response == null || response.indexOf("230") == -1) {
+		if(response == null || (response.indexOf("230") == -1 && response.indexOf("202") == -1)) {
 			this.handlePassError(response);
 			return false;
 		}
@@ -43,18 +47,13 @@ public class Login extends Command {
 	}
 	
 	private void handlePassError(String response) {
-		println("PASS command error. Password possibly invalid.");
-		usage();
-	}
-	
-	public void printSuccessMessage() {
-		println("Login successful");
+		this.failureMessage = "Invalid login information";
 	}
 
 	@Override
 	protected void interpretTokens(String[] tokens) {
 		if(tokens.length != 3) {
-			usage();
+			this.failureMessage = "Invalid syntax";
 			return;
 		}
 		this.username = tokens[1];

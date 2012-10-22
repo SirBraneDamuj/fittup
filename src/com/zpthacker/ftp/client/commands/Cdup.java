@@ -22,7 +22,7 @@ public class Cdup extends Command {
 	}
 	
 	private void handleError(String response) {
-		println("Error with cdup - most likely already in the root directory");
+		this.failureMessage = "Server rejected CDUP command";
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class Cdup extends Command {
 	@Override
 	protected void interpretTokens(String[] tokens) {
 		if(tokens.length != 1) {
-			usage();
+			this.failureMessage = "Invalid syntax";
 			return;
 		}
 		this.valid = true;

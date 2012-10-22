@@ -25,35 +25,30 @@ public class Passive extends Command {
 		}
 		return true;
 	}
-		
-	@Override
-	public void printSuccessMessage() {
-		println(this.successMessage);
-	}
 
 	@Override
 	protected void interpretTokens(String[] tokens) {
 		if(tokens.length < 2) { //if the command has fewer than two tokens
-			usage();
+			this.failureMessage = "Invalid syntax";
 			return;
 		} else if(tokens[1].toLowerCase().equals("on")) { //if the second token is "on"
 			if(tokens.length != 2) { //and the number of tokens is not 2
-				usage();
+				this.failureMessage = "Invalid syntax";
 				return;
 			}
 			this.isPassive = true;
 		} else if(tokens[1].toLowerCase().equals("off")) { //if the second token is "off"
 			if(tokens.length > 3) { //and the number of tokens is greater than 3
-				usage();
+				this.failureMessage = "Invalid syntax";
 				return;
-			} else if(tokens.length == 3) { //and the number of tokens is equal to 3
+			} else if(tokens.length == 3) { //or the number of tokens is equal to 3
 				this.port = Integer.parseInt(tokens[2]);
 			} else { //number of tokens is 2
 				this.port = 9000;
 			}
 			this.isPassive = false;
-		} else { //invalid command
-			usage();
+		} else { //second token is neither "on" nor "off"
+			this.failureMessage = "Invalid syntax";
 			return;
 		}
 		this.valid = true;

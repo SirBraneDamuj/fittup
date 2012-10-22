@@ -18,7 +18,7 @@ public class Get extends Command {
 	public boolean execute(Client c) {
 		String response = c.retr(this.path);
 		if(response == null) {
-			println("Error retrieving file");
+			this.failureMessage = "Error retrieving file";
 			return false;			
 		} else {
 			this.successMessage = "Successfully retrieved file.";
@@ -28,14 +28,9 @@ public class Get extends Command {
 	}
 
 	@Override
-	public void printSuccessMessage() {
-		println(this.successMessage);
-	}
-
-	@Override
 	protected void interpretTokens(String[] tokens) {
 		if(tokens.length != 2) {
-			usage();
+			this.failureMessage = "Invalid syntax";
 			return;
 		}
 		this.path = tokens[1];

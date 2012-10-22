@@ -15,29 +15,27 @@ public class Cd extends Command {
 	@Override
 	public boolean execute(Client c) {
 		String response = c.cwd(this.targetDirectory);
-		if(response == null || response.indexOf("250") == -1) {
+		if(response == null || (response.indexOf("250") == -1 && response.indexOf("200") == -1)) {
 			this.handleError(response);
+			return false;
 		} else {
 			this.successMessage = "Changed directory to \"" + this.targetDirectory + "\"";
 			return true;
 		}
-		return false;
 	}
 	
 	private void handleError(String response) {
-		println("Error changing directories - target directory might not exist.");
-		usage();
-	}
-
-	@Override
-	public void printSuccessMessage() {
-		println(this.successMessage);
+		if(response.indexOf("550") != -1) {
+			this.failureMessage = "Error: Directory does not exist.";
+		} else {
+			this.failureMessage = "Unknown error";
+		}
 	}
 
 	@Override
 	protected void interpretTokens(String[] tokens) {
 		if(tokens.length != 2) {
-			usage();
+			this.failureMessage = "Invalid syntax";
 			return;
 		}
 		this.targetDirectory = tokens[1];

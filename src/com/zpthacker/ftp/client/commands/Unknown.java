@@ -1,6 +1,5 @@
 package com.zpthacker.ftp.client.commands;
 
-import static com.zpthacker.ftp.client.util.ConsoleUtils.println;
 import com.zpthacker.ftp.client.Client;
 import com.zpthacker.ftp.client.Command;
 
@@ -12,12 +11,8 @@ public class Unknown extends Command {
 
 	@Override
 	public boolean execute(Client c) {
+		this.successMessage = "Unknown command: " + this.command;
 		return true;
-	}
-
-	@Override
-	public void printSuccessMessage() {
-		println("Unknown command: " + this.command);
 	}
 
 	@Override

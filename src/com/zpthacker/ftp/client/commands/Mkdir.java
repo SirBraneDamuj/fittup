@@ -16,28 +16,22 @@ public class Mkdir extends Command {
 	public boolean execute(Client c) {
 		String response = c.mkd(this.directoryArg);
 		if(response == null || response.indexOf("257") == -1) {
-			this.handleMkdError(response);
+			this.handleError(response);
 			return false;
 		} else {
-			this.successMessage = "Directory " + response.substring(4);
+			this.successMessage = "Created directory " + directoryArg;
 			return true;
 		}
 	}
 	
-	private void handleMkdError(String response) {
-		println("Unable to create directory, it may already exist.");
-		usage();
-	}
-
-	@Override
-	public void printSuccessMessage() {
-		println(this.successMessage);
+	private void handleError(String response) {
+		this.failureMessage = "Unable to create directory, it may already exist.";
 	}
 
 	@Override
 	protected void interpretTokens(String[] tokens) {
 		if(tokens.length != 2) {
-			usage();
+			this.failureMessage = "Invalid syntax";
 			return;
 		}
 		this.directoryArg = tokens[1];

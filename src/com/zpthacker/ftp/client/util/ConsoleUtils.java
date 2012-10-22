@@ -15,6 +15,11 @@ public class ConsoleUtils {
 		System.out.println(str);
 	}
 	
+	public static String prompt(String prompt) {
+		print(prompt);
+		return readLine();
+	}
+	
 	public static String readLine() {
 		String retval = null;
 		try {

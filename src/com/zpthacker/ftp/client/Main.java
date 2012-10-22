@@ -1,9 +1,11 @@
 package com.zpthacker.ftp.client;
 
 import static com.zpthacker.ftp.client.util.ConsoleUtils.println;
+import static com.zpthacker.ftp.client.util.ConsoleUtils.prompt;
 
 import java.io.IOException;
 
+import com.zpthacker.ftp.client.commands.Login;
 import com.zpthacker.ftp.client.util.Logger;
 
 public class Main {
@@ -27,14 +29,26 @@ public class Main {
 			} catch(IOException e) {
 				usageAndExit("Error creating connection. Verify hostname and port and try again.");
 			}
-			CLI cli = new CLI(c);
-			cli.start();
+			if(login(c)) {
+				CLI cli = new CLI(c);
+				cli.start();
+			} else {
+				println("Login failed. Aborting...");
+			}
 			Logger.close();
 		} catch(Exception e) {
 			throw e;
 		} finally {
 			Logger.close();
 		}
+	}
+	
+	private static boolean login(Client c) {
+		String username = prompt("Username: ");
+		String password = prompt("Password: ");
+		String command = "login " + username + " " + password;
+		Login l = new Login(command.split(" "));
+		return l.execute(c);
 	}
 	
 	private static void usageAndExit(String errorMessage) {

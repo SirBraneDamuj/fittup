@@ -7,7 +7,6 @@ import static com.zpthacker.ftp.client.util.ConsoleUtils.readLine;
 import com.zpthacker.ftp.client.commands.Cd;
 import com.zpthacker.ftp.client.commands.Cdup;
 import com.zpthacker.ftp.client.commands.Get;
-import com.zpthacker.ftp.client.commands.Login;
 import com.zpthacker.ftp.client.commands.Ls;
 import com.zpthacker.ftp.client.commands.Mkdir;
 import com.zpthacker.ftp.client.commands.Passive;
@@ -31,11 +30,16 @@ public class CLI {
 		while(true) {
 			print(this.getPrompt());
 			String line = readLine();
+			if(line.equals("")) {
+				continue;
+			}
 			Command command = createCommand(line);
 			if(command == null) {
 				return;
 			} else if(command.isValid() && command.execute(this.client)) {
 				command.printSuccessMessage();
+			} else {
+				command.printFailureMessage();
 			}
 		}
 	}
@@ -43,8 +47,6 @@ public class CLI {
 	private Command createCommand(String command) {
 		String[] tokens = command.split(" ");
 		switch(tokens[0].toLowerCase()) {
-			case "login":
-				return new Login(tokens);
 			case "pwd":
 				return new Pwd(tokens);
 			case "mkdir":

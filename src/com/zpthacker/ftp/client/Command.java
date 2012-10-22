@@ -1,10 +1,13 @@
 package com.zpthacker.ftp.client;
 
+import static com.zpthacker.ftp.client.util.ConsoleUtils.println;
+
 public abstract class Command {
 	
 	protected String command;
 	protected boolean valid;
 	protected String successMessage;
+	protected String failureMessage;
 	
 	public Command() {
 		this.valid = false;
@@ -25,7 +28,13 @@ public abstract class Command {
 	}
 	
 	public abstract boolean execute(Client c);
-	public abstract void printSuccessMessage();
+	public void printSuccessMessage() {
+		println(this.successMessage);
+	}
+	public void printFailureMessage() {
+		println(this.failureMessage);
+		usage();
+	}
 	protected abstract void interpretTokens(String[] tokens);
 	protected abstract void usage();
 }

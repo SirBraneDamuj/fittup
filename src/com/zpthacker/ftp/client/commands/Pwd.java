@@ -17,19 +17,16 @@ public class Pwd extends Command {
 		if(response.indexOf("257") != -1) {
 			this.successMessage = response.substring(4); //remove status code from response to get pwd message
 			return true;
+		} else {
+			this.failureMessage = "PWD failed...something's really messed up here.";
+			return false;
 		}
-		return false;
-	}
-
-	@Override
-	public void printSuccessMessage() {
-		println(this.successMessage);
 	}
 
 	@Override
 	protected void interpretTokens(String[] tokens) {
 		if(tokens.length != 1) {
-			usage();
+			this.failureMessage = "Invalid syntax";
 			return;
 		}
 		this.valid = true;
