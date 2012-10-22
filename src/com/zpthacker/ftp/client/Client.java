@@ -106,6 +106,7 @@ public class Client {
 		if(argument != null) {
 			command += " " + argument;
 		}
+		//send data connection data into standard out
 		boolean result = this.getData(command, System.out);
 		return result;
 	}
@@ -118,6 +119,7 @@ public class Client {
 		String command = "retr " + path;
 		try {
 			FileOutputStream out = FileUtils.getFileOutputStream(path);
+			//send data connection data into a file
 			boolean result = this.getData(command, out);
 			out.close();
 			return result;
@@ -126,22 +128,28 @@ public class Client {
 		}
 	}
 	
+	/*
+	 * Opens the data connection socket and reads data from it
+	 * Sends received data into an output stream
+	 */
 	private boolean getData(String command, OutputStream out) {
 		Socket socket = null;
+		//passive mode requires the socket to be created before sending the request
 		if(this.passive) {
 			socket = this.conn.getSocket();
 		}
 		String response = this.writeCommand(command);
+		//port mode requires the socket to be created after sending the request
 		if(!this.passive) {
 			socket = this.conn.getSocket();
 		}
-		if(response.indexOf("150") != -1) {
+		if(response.indexOf("150") != -1) { //received a mark from the server
 			this.readDataSocket(socket, out);
 			try {
 				response = this.readLine();
 				if(response.indexOf("226") == -1) {
 					return false;
-				} else {
+				} else { //transfer successful
 					return true;
 				}
 			} catch(IOException e) {
@@ -152,6 +160,7 @@ public class Client {
 		}
 	}
 	
+	//PASV must be sent prior to all data connections when in passive mode
 	public void pasv() {
 		String response = this.writeCommand("pasv");
 		if(response.indexOf("227") == -1) {
@@ -160,6 +169,7 @@ public class Client {
 		this.conn = new PassiveConnection(response);
 	}
 	
+	//PORT must be sent prior to all data connections when in port mode
 	public void port() {
 		String portString = "," + Integer.toString(this.dataPort/256) + ",";
 		portString += this.dataPort % 256;
@@ -171,21 +181,35 @@ public class Client {
 		this.conn = new PortConnection(this.dataPort);
 	}
 	
+	/*
+	 * implemented as requested in the assignment
+	 * but not exposed to a CLI command
+	 * because the user shouldn't know about FTP commands
+	 */
 	public String help() {
 		return this.writeCommand("help");
 	}
 	
-	//Writes a command to the server and returns the response
-	//Hides IOException so we don't have try/catches errywhere
+	/*
+	 * Writes a command to the server,
+	 * then reads lines until it encounters one that begins with ###<SP>
+	 * Lines that don't begin with that indicate that more lines are available to read
+	 */
 	public String writeCommand(String command) {
-		String response = null;
 		try {
+			String response = null;
 			this.printLine(command);
-			response = this.readLine();
+			String retval = "";
+			do {
+				response = this.readLine();
+				retval += response + "\n";
+			} while(response.indexOf(" ") != 3);
+			retval = retval.substring(0, retval.length()-1);
+			return retval;
 		} catch(IOException e) {
 			System.out.println("Error while executing command: " + command);
 		}
-		return response;
+		return null;
 	}
 	
 	public void close() throws IOException {

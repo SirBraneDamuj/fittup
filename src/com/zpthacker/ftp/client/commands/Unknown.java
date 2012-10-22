@@ -15,19 +15,26 @@ import com.zpthacker.ftp.client.Command;
 
 public class Unknown extends Command {
 	
+	private String attemptedCommand;
+	
 	public Unknown(String[] tokens) {
 		super(tokens);
 		this.command = "unknown";
 	}
+	
+	public String getAttemptedCommand() {
+		return this.attemptedCommand;
+	}
 
 	@Override
 	public boolean execute(Client c) {
-		this.successMessage = "Unknown command: " + this.command;
+		this.successMessage = "Unknown command: " + this.attemptedCommand;
 		return true;
 	}
 
 	@Override
 	protected void interpretTokens(String[] tokens) {
+		this.attemptedCommand = tokens[0];
 		this.valid = true;
 	}
 
